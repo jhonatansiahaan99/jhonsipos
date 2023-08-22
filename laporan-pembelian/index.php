@@ -8,7 +8,7 @@ if (!isset($_SESSION["ssLoginPOS"])) { //jika user coba masuk melalui url dan ti
 
 require "../config/config.php";
 require "../config/functions.php";
-require "../module/mode-barang.php";
+
 
 $title = "Laporan Pembelian - Jhonsi Bengkel Motor";
 require "../template/header.php";
@@ -116,7 +116,7 @@ $pembelian = getData("SELECT * FROM tbl_beli_head");
     </div>
     <!-- /.modal -->
 
-    <script>
+    <script type="text/javascript">
         let tgl1 = document.getElementById('tgl1');
         let tgl2 = document.getElementById('tgl2');
 

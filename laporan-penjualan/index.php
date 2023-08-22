@@ -8,7 +8,7 @@ if (!isset($_SESSION["ssLoginPOS"])) { //jika user coba masuk melalui url dan ti
 
 require "../config/config.php";
 require "../config/functions.php";
-require "../module/mode-barang.php";
+
 
 $title = "Laporan Penjualan - Jhonsi Bengkel Motor";
 require "../template/header.php";
@@ -47,6 +47,9 @@ $penjualan = getData("SELECT * FROM tbl_jual_head");
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title"><i class="fas fa-list fa-sm"></i> Data Penjualan</h3>
+                    <button type="button" class="btn btn-sm btn-outline-primary float-right" data-toggle="modal" data-target="#mdlPeriodeBeli">
+                        <i class="fas fa-print"></i> Cetak
+                    </button>
                 </div>
                 <div class="card-body table-responsive p-3">
                     <table class="table table-hover text-nowrap" id="tblData">
@@ -76,10 +79,7 @@ $penjualan = getData("SELECT * FROM tbl_jual_head");
                                     <td><?= $jual['KETERANGAN'] ?></td>
                                     <td class="text-center"><?= number_format($jual['JML_BAYAR'], 0, ",", ".") ?></td>
                                     <td class="text-center"><?= number_format($jual['KEMBALIAN'], 0, ",", ".") ?></td>
-                                    <td class="text-center">
-                                        <button type="button" class="btn btn-sm btn-info" id="btnDetail" data-nojual="<?= $jual['NO_JUAL'] ?>" data-tgl="<?= $jual['TGL_JUAL'] ?>" title="rincian barang" onclick="ubah('<?= $jual['NO_JUAL'] ?>')">Detail</button>
-
-                                    </td>
+                                    <td class="text-center"><a href="detail-penjualan.php?id=<?= $jual['NO_JUAL'] ?>&tgl=<?= in_date($jual['TGL_JUAL']) ?>" class="btn btn-sm btn-info" title="rincian penjualan">Detail</a></td>
                                 </tr>
                             <?php
                             }
@@ -92,40 +92,32 @@ $penjualan = getData("SELECT * FROM tbl_jual_head");
         </div>
     </section>
 
-
     <!-- modal -->
-    <div class="modal fade" id="mdlDetail">
-        <div class="modal-dialog modal-lg">
+    <div class="modal fade" id="mdlPeriodeBeli">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Cetak Barcode</h4>
+                    <h4 class="modal-title">Periode Pembelian</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group row">
-                        <label for="nmBrg" class="col-sm-3 col-form-label">Nama Barang</label>
+                        <label for="tglAwal" class="col-sm-3 col-form-label">Tanggal Awal</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="nmBrg" readonly>
+                            <input type="date" class="form-control" id="tgl1">
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="barcode" class="col-sm-3 col-form-label">Barcode</label>
+                        <label for="tglAkhir" class="col-sm-3 col-form-label">Tanggal Akhir</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="barcode" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="jmlCetak" class="col-sm-3 col-form-label">Jumlah Cetak</label>
-                        <div class="col-sm-9">
-                            <input type="number" min="1" max="10" value="1" title="maximal 10" id="jmlCetak" class="form-control" id="barcode">
+                            <input type="date" class="form-control" id="tgl2">
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="preview"><i class="fas fa-print"></i> Cetak</button>
+                <div class="modal-footer ">
+                    <button type="button" class="btn btn-primary" onclick="printDoc()"><i class="fas fa-print"></i>Cetak</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -134,25 +126,16 @@ $penjualan = getData("SELECT * FROM tbl_jual_head");
     </div>
     <!-- /.modal -->
 
+    <script type="text/javascript">
+        let tgl1 = document.getElementById('tgl1');
+        let tgl2 = document.getElementById('tgl2');
 
-
-
-
-
-    <script>
-        $(document).ready(function() {
-            $(document).on("click", "#btnDetail", function() { //#btnCetakBarcode diambil dari tombol diatas //#btnCetakBarcode diklik maka kita jalani fungi untuk menampilkan modal
-                $('#mdlDetail').modal('show'); //carikan elemen yang id nya #mdlCetakBarcode, ketika ketemu kemudian show(tampilkan)
-                let barcode = $(this).data('barcode'); //data-barcode diambil dari tombol, bukan diambil dari id tapi data- dengan nama barcode
-                let nama = $(this).data('nama');
-                $('#nmBrg').val(nama); //cara baca nya biar mudah, jquery cari kan id #nmBrg, .(titik disebut kemudian jika ketemu),jika ketemu isi nya diambil nilai yaitu val // id nmBrg diambil dari id di form modal
-                $('#barcode').val(barcode);
-            })
-
-        })
+        function printDoc() {
+            if (tgl1.value != "" && tgl2.value != "") {
+                window.open("../report/r-jual.php?tgl1=" + tgl1.value + "&tgl2=" + tgl2.value, "", "width=900,height=600,left=100");
+            }
+        }
     </script>
-
-
 
     <?php
     require "../template/footer.php";

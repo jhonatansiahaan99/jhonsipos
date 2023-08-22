@@ -1,6 +1,6 @@
 <?php
 
-if (userLogin()['USER_LEVEL'] == 3 || userLogin()['USER_LEVEL'] == 2) { //MENGECEK USER YANG AKTIF // ketika level user 3 yaitu kasir maka kita tolak untuk akses supplier
+if (userLogin()['USER_LEVEL'] == 3) { //MENGECEK USER YANG AKTIF // ketika level user 3 yaitu kasir maka kita tolak untuk akses supplier
     header("location:" . $main_url . "error-page.php");
     exit();
 }
@@ -23,6 +23,47 @@ function generateId()
     $maxId      = "BRG-" . $date . "-" . sprintf("%05s", $noUrut);
     return $maxId;
 }
+
+function generateBarcode()
+{
+    global $koneksi;
+
+    date_default_timezone_set('Asia/Jakarta');
+
+    // Mendapatkan tanggal saat ini
+    $date = date("Ymd");
+
+    // Daftar huruf dan angka yang akan digunakan dalam barcode
+    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+    // Panjang karakter acak untuk barcode
+    $barcodeLength = 10;
+
+    do {
+        // Inisialisasi string untuk menyimpan karakter acak
+        $randomString = '';
+
+        // Loop untuk menghasilkan karakter acak sebanyak $barcodeLength kali
+        for ($i = 0; $i < $barcodeLength; $i++) {
+            // Mengambil karakter acak dari $characters dengan indeks acak
+            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+        }
+
+
+        // Kombinasikan tanggal dengan karakter acak untuk mendapatkan barcode lengkap
+        $barcode = $date . $randomString;
+
+        // Cek apakah barcode sudah ada di database
+        $query = "SELECT COUNT(*) as count FROM tbl_barang WHERE BARCODE = '$barcode'";
+        $result = mysqli_query($koneksi, $query);
+        $data = mysqli_fetch_assoc($result);
+        $barcodeExists = $data['count'] > 0;
+    } while ($barcodeExists); // Ulangi proses jika barcode sudah ada di database
+
+    // Mengembalikan barcode yang unik
+    return $barcode;
+}
+
 
 
 function insert($data)
@@ -165,5 +206,36 @@ function update($data)
                            GAMBAR           = '$imgBrg'
                            WHERE ID_BARANG  = '$id'    
     ");
+    return mysqli_affected_rows($koneksi);
+}
+
+function simpan_barcode($data)
+{
+    global $koneksi;
+
+    $id             = mysqli_real_escape_string($koneksi, $data['id_barang']);
+    $barcode        = mysqli_real_escape_string($koneksi, $data['addbarcode']);
+    $cekBarcode     = mysqli_query($koneksi, "SELECT * FROM tbl_barcode WHERE ADD_BARCODE = '$barcode' ");
+    if (mysqli_num_rows($cekBarcode)) {
+        echo '<script>alert("Kode Barcode Sudah Ada, Barang Gagal DiTambahkan")</script>';
+        return false;
+    }
+    if ($id == '' || $barcode == '') {
+        echo '<script>alert("Gagal Disimpan!! ID dan Barcode Tidak Ada...")</script>';
+        echo "
+            <script>document.location.href = 'index.php'</script>
+         ";
+        return false;
+    }
+
+    mysqli_query($koneksi, "INSERT INTO tbl_barcode value (NULL,'$id','$barcode')");
+    return mysqli_affected_rows($koneksi);
+}
+
+function delete_barcode($idbarcode)
+{
+    global $koneksi;
+
+    mysqli_query($koneksi, "DELETE FROM tbl_barcode WHERE ID_BARCODE = '$idbarcode'");
     return mysqli_affected_rows($koneksi);
 }

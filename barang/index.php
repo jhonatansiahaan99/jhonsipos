@@ -124,9 +124,9 @@ if ($msg == 'updated') {
                         <thead>
                             <tr>
                                 <th>Gambar</th>
-                                <th>Id Barang</th>
+                                <th>ID Barang</th>
+                                <th>Barcode</th>
                                 <th>Nama Barang</th>
-                                <th>Category</th>
                                 <th>Type Motor</th>
                                 <th>Stock</th>
                                 <th>Harga Beli</th>
@@ -137,20 +137,66 @@ if ($msg == 'updated') {
                         <tbody>
                             <?php
                             $no = 1;
-                            $barang = getData("SELECT * FROM tbl_barang");
+                            $barang = getData("SELECT * FROM tbl_barang ORDER BY ID_BARANG DESC");
                             foreach ($barang as $brg) : ?>
                                 <tr>
                                     <td><img src="../asset/imageuser/<?= $brg['GAMBAR'] ?>" alt="gambar barang" class="rounded-circle" width="60px"></td>
                                     <td><?= $brg['ID_BARANG'] ?></td>
-                                    <td><?= $brg['NAMA_BARANG'] ?></td>
-                                    <td><?= $brg['CATEGORY'] ?></td>
-                                    <td><?= $brg['TYPE_MOTOR'] ?></td>
+                                    <td><?= $brg['BARCODE'] ?></td>
+
+                                    <?php
+                                    $namaBarang = $brg['NAMA_BARANG']; // Ambil nama barang dari data
+                                    // Memisahkan nama barang menjadi array berdasarkan spasi
+                                    $nama = explode(' ', $namaBarang);
+                                    // Memeriksa apakah nama barang memiliki lebih dari 4 kata
+                                    if (count($nama) > 4) {
+                                        echo '<td>';
+                                        $counter = 0;
+                                        foreach ($nama as $namaBrg) {
+                                            echo $namaBrg . ' ';
+                                            $counter++;
+                                            if ($counter == 4) {
+                                                echo '<br>';
+                                                $counter = 0;
+                                            }
+                                        }
+                                        echo '</td>';
+                                    } else {
+                                        // Menampilkan nama barang dalam satu baris
+                                        echo '<td>' . $namaBarang . '</td>';
+                                    }
+                                    ?>
+
+
+                                    <?php
+                                    $typeMotor = $brg['TYPE_MOTOR']; // Ambil tipe motor dari data
+                                    // Memisahkan tipe motor menjadi array berdasarkan koma
+                                    $types = explode(',', $typeMotor);
+                                    // Memeriksa apakah tipe motor memiliki lebih dari 3 kata
+                                    if (count($types) > 3) {
+                                        echo '<td>';
+                                        $counter = 0;
+                                        foreach ($types as $type) {
+                                            echo $type . ',';
+                                            $counter++;
+                                            if ($counter == 3) {
+                                                echo '<br>';
+                                                $counter = 0;
+                                            }
+                                        }
+                                        echo '</td>';
+                                    } else {
+                                        // Menampilkan tipe motor dalam satu baris
+                                        echo '<td>' . $typeMotor . '</td>';
+                                    }
+                                    ?>
                                     <td><?= $brg['STOCK'] ?></td>
                                     <td><?= number_format($brg['HARGA_BELI'], 0, ',', '.')  ?></td>
                                     <td><?= number_format($brg['HARGA_BARANG'], 0, ',', '.') ?></td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-secondary" id="btnCetakBarcode" data-barcode="<?= $brg['BARCODE'] ?>" data-nama="<?= $brg['NAMA_BARANG'] ?>" title="cetak barcode"><i class="fas fa-barcode"></i></button>
                                         <a href="form-barang.php?id=<?= $brg['ID_BARANG'] ?>&msg=editing" class="btn btn-warning btn-sm" title="edit barang"><i class="fas fa-pen"></i></a>
+                                        <a href="add-barcode.php?id=<?= $brg['ID_BARANG'] ?>" class="btn btn-primary btn-sm" title="Tambah Barcode"><i class="fas fa-plus"></i></a>
                                         <a href="?id=<?= $brg['ID_BARANG'] ?>&gbr=<?= $brg['GAMBAR'] ?>&msg=deleted" class="btn btn-danger btn-sm tombol-hapus" title="hapus barang"><i class="fas fa-trash"></i></a>
                                     </td>
                                 </tr>
@@ -208,7 +254,7 @@ if ($msg == 'updated') {
 
 
 
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
             $(document).on("click", "#btnCetakBarcode", function() { //#btnCetakBarcode diambil dari tombol diatas //#btnCetakBarcode diklik maka kita jalani fungi untuk menampilkan modal
                 $('#mdlCetakBarcode').modal('show'); //carikan elemen yang id nya #mdlCetakBarcode, ketika ketemu kemudian show(tampilkan)

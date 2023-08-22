@@ -1,6 +1,6 @@
 <?php
 
-if (userLogin()['USER_LEVEL'] == 3 || userLogin()['USER_LEVEL'] == 2) { //MENGECEK USER YANG AKTIF // ketika level user 3 yaitu kasir maka kita tolak untuk akses supplier
+if (userLogin()['USER_LEVEL'] == 3) { //MENGECEK USER YANG AKTIF // ketika level user 3 yaitu kasir maka kita tolak untuk akses supplier
     header("location:" . $main_url . "error-page.php");
     exit();
 }

@@ -101,7 +101,7 @@ if (isset($_POST['simpan'])) {
                                 </div>
                                 <div class="form-group">
                                     <label for="barcode">Barcode *</label>
-                                    <input type="text" name="barcode" class="form-control" id="barcode" value="<?= $msg != '' ? $barang['BARCODE'] : null ?>" placeholder="barcode" autocomplete="off" autofocus required>
+                                    <input type="text" name="barcode" class="form-control" id="barcode" value="<?= $msg != '' ? $barang['BARCODE'] : generateBarcode() ?>" placeholder="barcode" autocomplete="off" autofocus required>
                                 </div>
                                 <div class="form-group">
                                     <label for="name">Nama Barang*</label>
@@ -117,7 +117,7 @@ if (isset($_POST['simpan'])) {
                                             $id_category = $barang['CATEGORY'];
                                             $sql_category = getData("SELECT * FROM tbl_kategori");
                                             foreach ($sql_category as $data_kategori) :
-                                                $id_data_category = $data_kategori['ID_CATEGORY'];
+                                                $id_data_category = $data_kategori['CATEGORY'];
                                                 //Data akan terseleksi (selected) jika variabel $kode_kelas sama dengan $kode_data_kelas.
                                                 if ($id_category == $id_data_category) {
                                                     $cek = "selected";
@@ -131,7 +131,7 @@ if (isset($_POST['simpan'])) {
                                             $sql_category = getData("SELECT * FROM tbl_kategori");
                                             foreach ($sql_category as $data_kategori) :
                                             ?>
-                                                <option value="<?= $data_kategori['ID_CATEGORY'] ?>"><?= $data_kategori['CATEGORY'] ?></option>
+                                                <option value="<?= $data_kategori['CATEGORY'] ?>"><?= $data_kategori['CATEGORY'] ?></option>
                                         <?php
                                             endforeach;
                                         }
@@ -147,7 +147,7 @@ if (isset($_POST['simpan'])) {
                                             $id_brand = $barang['BRAND'];
                                             $sql_brand = getData("SELECT * FROM tbl_brand");
                                             foreach ($sql_brand as $data_brand) :
-                                                $id_data_brand = $data_brand['ID_BRAND'];
+                                                $id_data_brand = $data_brand['BRAND'];
                                                 //Data akan terseleksi (selected) jika variabel $kode_kelas sama dengan $kode_data_kelas.
                                                 if ($id_brand == $id_data_brand) {
                                                     $cek = "selected";
@@ -161,7 +161,7 @@ if (isset($_POST['simpan'])) {
                                             $sql_brand = getData("SELECT * FROM tbl_brand");
                                             foreach ($sql_brand as $data_brand) :
                                             ?>
-                                                <option value="<?= $data_brand['ID_BRAND'] ?>"><?= $data_brand['BRAND'] ?></option>
+                                                <option value="<?= $data_brand['BRAND'] ?>"><?= $data_brand['BRAND'] ?></option>
                                         <?php
                                             endforeach;
                                         }
@@ -177,13 +177,13 @@ if (isset($_POST['simpan'])) {
                                                 $pisahkoma = explode(',', $barang['TYPE_MOTOR']);
                                                 $database_type_motor = getData("SELECT * FROM tbl_type_motor ");
                                                 foreach ($database_type_motor as $data_type_motor) :
-                                                    $selected = in_array($data_type_motor['ID_MOTOR'], $pisahkoma) ? 'selected' : '';
-                                                    echo "<option value='" . $data_type_motor["ID_MOTOR"] . "' " . $selected . ">" . $data_type_motor["TYPE_MOTOR"] . "</option>";
+                                                    $selected = in_array($data_type_motor['TYPE_MOTOR'], $pisahkoma) ? 'selected' : '';
+                                                    echo "<option value='" . $data_type_motor["TYPE_MOTOR"] . "' " . $selected . ">" . $data_type_motor["TYPE_MOTOR"] . "</option>";
                                                 endforeach;
                                             } else {
                                                 $database_type_motor = $koneksi->query("SELECT * FROM tbl_type_motor ") or die(mysqli_error($koneksi));
                                                 while ($data_type_motor = $database_type_motor->fetch_assoc()) {
-                                                    echo '<option value="' . $data_type_motor['ID_MOTOR'] . '">' . $data_type_motor['TYPE_MOTOR'] . '</option>';
+                                                    echo '<option value="' . $data_type_motor['TYPE_MOTOR'] . '">' . $data_type_motor['TYPE_MOTOR'] . '</option>';
                                                 }
                                             } ?>
                                         </select>
@@ -199,7 +199,7 @@ if (isset($_POST['simpan'])) {
                                             $id_satuan = $barang['SATUAN'];
                                             $sql_satuan = getData("SELECT * FROM tbl_satuan");
                                             foreach ($sql_satuan as $data_satuan) :
-                                                $id_data_satuan = $data_satuan['ID_SATUAN'];
+                                                $id_data_satuan = $data_satuan['SATUAN'];
                                                 //Data akan terseleksi (selected) jika variabel $kode_kelas sama dengan $kode_data_kelas.
                                                 if ($id_satuan == $id_data_satuan) {
                                                     $cek = "selected";
@@ -213,7 +213,7 @@ if (isset($_POST['simpan'])) {
                                             $sql_satuan = getData("SELECT * FROM tbl_satuan");
                                             foreach ($sql_satuan as $data_satuan) :
                                             ?>
-                                                <option value="<?= $data_satuan['ID_SATUAN'] ?>"><?= $data_satuan['SATUAN'] ?></option>
+                                                <option value="<?= $data_satuan['SATUAN'] ?>"><?= $data_satuan['SATUAN'] ?></option>
                                         <?php
                                             endforeach;
                                         }

@@ -8,7 +8,7 @@ if (!isset($_SESSION["ssLoginPOS"])) { //jika user coba masuk melalui url dan ti
 
 require "../config/config.php";
 require "../config/functions.php";
-require "../module/mode-barang.php";
+
 
 $title = "Laporan - Jhonsi Bengkel Motor";
 require "../template/header.php";

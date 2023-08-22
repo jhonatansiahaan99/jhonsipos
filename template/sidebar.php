@@ -61,19 +61,19 @@
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#" class="nav-link ">
+                                        <a href="<?= $main_url ?>brand" class="nav-link <?= menuBrand() ?>">
                                             <i class="far fa-circle nav-icon text-sm"></i>
                                             <p>Brand</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#" class="nav-link ">
+                                        <a href="<?= $main_url ?>type-motor" class="nav-link <?= menuTypeMotor() ?>">
                                             <i class="far fa-circle nav-icon text-sm"></i>
                                             <p>Type Motor</p>
                                         </a>
                                     </li>
                                     <li class="nav-item">
-                                        <a href="#" class="nav-link ">
+                                        <a href="<?= $main_url ?>satuan" class="nav-link <?= menuSatuan() ?>">
                                             <i class="far fa-circle nav-icon text-sm"></i>
                                             <p>Satuan</p>
                                         </a>
@@ -86,43 +86,72 @@
                 }
                 ?>
                 <li class="nav-header">Transaksi</li>
-                <li class="nav-item">
-                    <a href="<?= $main_url ?>pembelian" class="nav-link <?= menuPembelian() ?>">
-                        <i class="nav-icon fas fa-shopping-cart text-sm"></i>
-                        <p>Pembelian</p>
+                <?php
+                if (userLogin()['USER_LEVEL'] != 3) { //KALO BUKAN 3(KASIR) MAKA TIDAK BISA BUKA HALAMAN MASTER
+                ?>
+                    <li class="nav-item">
+                        <a href="<?= $main_url ?>pembelian" class="nav-link <?= menuPembelian() ?>">
+                            <i class="nav-icon fas fa-shopping-cart text-sm"></i>
+                            <p>Pembelian</p>
+                        </a>
+                    </li>
+                <?php
+                }
+                ?>
+
+                <li class="nav-item <?= menuMasterPenjualan() ?>">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-folder text-sm"></i>
+                        <p>Master Penjualan <i class="fas fa-angle-left right"></i></p>
                     </a>
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="<?= $main_url ?>penjualan" class="nav-link <?= menuPenjualan() ?>">
+                                <i class="far fa-circle nav-icon text-sm"></i>
+                                <p>Penjualan</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= $main_url ?>data-penjualan" class="nav-link <?= menuDataPenjualan() ?>">
+                                <i class="far fa-circle nav-icon text-sm"></i>
+                                <p>Data Penjualan</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li class="nav-item">
-                    <a href="<?= $main_url ?>penjualan" class="nav-link <?= menuPenjualan() ?>">
-                        <i class="nav-icon fas fa-file-invoice text-sm"></i>
-                        <p>Penjualan</p>
-                    </a>
-                </li>
+
+
                 <li class="nav-item ">
                     <a href="<?= $main_url ?>customer/data-customer.php" class="nav-link <?= menuCustomer() ?>">
                         <i class="nav-icon fas fa-address-book text-sm"></i>
                         <p>Customer</p>
                     </a>
                 </li>
-                <li class="nav-header">Report</li>
-                <li class="nav-item">
-                    <a href="<?= $main_url ?>laporan-pembelian" class="nav-link <?= menuLaporanPembelian() ?>">
-                        <i class="nav-icon fas fa-chart-pie text-sm"></i>
-                        <p>Laporan Pembelian</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="<?= $main_url ?>laporan-penjualan" class="nav-link <?= menuLaporanPenjualan() ?>">
-                        <i class="nav-icon fas fa-chart-line text-sm"></i>
-                        <p>Laporan Penjualan</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-warehouse text-sm"></i>
-                        <p>Laporan Stock</p>
-                    </a>
-                </li>
+                <?php
+                if (userLogin()['USER_LEVEL'] != 3) { //KALO BUKAN 3(KASIR) MAKA TIDAK BISA BUKA HALAMAN MASTER
+                ?>
+                    <li class="nav-header">Report</li>
+                    <li class="nav-item">
+                        <a href="<?= $main_url ?>laporan-pembelian" class="nav-link <?= menuLaporanPembelian() ?>">
+                            <i class="nav-icon fas fa-chart-pie text-sm"></i>
+                            <p>Laporan Pembelian</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?= $main_url ?>laporan-penjualan" class="nav-link <?= menuLaporanPenjualan() ?>">
+                            <i class="nav-icon fas fa-chart-line text-sm"></i>
+                            <p>Laporan Penjualan</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?= $main_url ?>stock" class="nav-link <?= laporanStock() ?>">
+                            <i class="nav-icon fas fa-warehouse text-sm"></i>
+                            <p>Laporan Stock</p>
+                        </a>
+                    </li>
+                <?php
+                }
+                ?>
                 <?php
                 if (userLogin()['USER_LEVEL'] == 1) { //JIKA LEVEL USER 1(SUPERADMIN) BUKA BOLEH USER
                 ?>

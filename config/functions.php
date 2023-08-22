@@ -55,6 +55,7 @@ function uploadimg($url = null, $name = null) //$name = null (buat nama file gam
 
 
 //ambil data
+//ambil data
 function getData($sql)
 {
     global $koneksi;
@@ -146,7 +147,7 @@ function menuSupplier()
 
 function menuMaster()
 {
-    if (userMenu() == 'supplier' || userMenu() == 'category' or userMenu() == 'barang') { //jika user membuka menu supplier untuk membuka master
+    if (userMenu() == 'supplier' || userMenu() == 'category' or userMenu() == 'barang' || userMenu() == 'brand' || userMenu() == 'type-motor' || userMenu() == 'satuan') { //jika user membuka menu supplier untuk membuka master
         $result = 'menu-is-opening menu-open'; // menu-is-opening menu-open itu bagian dari html AdminLTE
     } else {
         $result = null;
@@ -154,9 +155,21 @@ function menuMaster()
     return $result;
 }
 
+function menuMasterPenjualan()
+{
+    if (userMenu() == 'penjualan' || userMenu() == 'data-penjualan') { //jika user membuka menu supplier untuk membuka master
+        $result = 'menu-is-opening menu-open'; // menu-is-opening menu-open itu bagian dari html AdminLTE
+    } else {
+        $result = null;
+    }
+    return $result;
+}
+
+
+
 function menuMasterBarang()
 {
-    if (userMenu() == 'category' or userMenu() == 'barang') { //jika user membuka menu supplier untuk membuka master
+    if (userMenu() == 'category' or userMenu() == 'barang' || userMenu() == 'brand' || userMenu() == 'type-motor' || userMenu() == 'satuan') { //jika user membuka menu supplier untuk membuka master
         $result = 'menu-is-opening menu-open'; // menu-is-opening menu-open itu bagian dari html AdminLTE
     } else {
         $result = null;
@@ -194,6 +207,16 @@ function menuPenjualan()
     return $result;
 }
 
+function menuDataPenjualan()
+{
+    if (userMenu() == 'data-penjualan') { //url // jika user lagi buka menu dashboard.php maka yang di sorot menu dashboard di sidebar
+        $result = 'active'; //active itu bagian dari html AdminLTE
+    } else {
+        $result = null;
+    }
+    return $result;
+}
+
 function menuCategory()
 {
     if (userMenu() == 'category') { //url // jika user lagi buka menu dashboard.php maka yang di sorot menu dashboard di sidebar
@@ -207,6 +230,16 @@ function menuCategory()
 function menuBarang()
 {
     if (userMenu() == 'barang') { //url // jika user lagi buka menu dashboard.php maka yang di sorot menu dashboard di sidebar
+        $result = 'active'; //active itu bagian dari html AdminLTE
+    } else {
+        $result = null;
+    }
+    return $result;
+}
+
+function laporanStock()
+{
+    if (userMenu() == 'stock') { //url // jika user lagi buka menu dashboard.php maka yang di sorot menu dashboard di sidebar
         $result = 'active'; //active itu bagian dari html AdminLTE
     } else {
         $result = null;
@@ -241,4 +274,52 @@ function menuLaporanPenjualan()
         $result = null;
     }
     return $result;
+}
+
+function omzet()
+{
+    global $koneksi;
+    $queryOmzet = mysqli_query($koneksi, "SELECT sum(TOTAL) AS omzet FROM tbl_jual_head");
+    $data       = mysqli_fetch_assoc($queryOmzet);
+    $omzet      = number_format($data['omzet'], 0, ',' . '.');
+    return $omzet;
+}
+
+
+function menuBrand()
+{
+    if (userMenu() == 'brand') { //url // jika user lagi buka menu dashboard.php maka yang di sorot menu dashboard di sidebar
+        $result = 'active'; //active itu bagian dari html AdminLTE
+    } else {
+        $result = null;
+    }
+    return $result;
+}
+
+function menuTypeMotor()
+{
+    if (userMenu() == 'type-motor') { //url // jika user lagi buka menu dashboard.php maka yang di sorot menu dashboard di sidebar
+        $result = 'active'; //active itu bagian dari html AdminLTE
+    } else {
+        $result = null;
+    }
+    return $result;
+}
+function menuSatuan()
+{
+    if (userMenu() == 'satuan') { //url // jika user lagi buka menu dashboard.php maka yang di sorot menu dashboard di sidebar
+        $result = 'active'; //active itu bagian dari html AdminLTE
+    } else {
+        $result = null;
+    }
+    return $result;
+}
+
+
+function getTotalOmzet($query)
+{
+    global $koneksi;
+    $queryOmzet = mysqli_query($koneksi, $query);
+    $data = mysqli_fetch_assoc($queryOmzet);
+    return $data['omzet'];
 }
